@@ -1,34 +1,41 @@
-import { ProductsModal } from "@/models/products";
-import dbConnect from "../../../../libs/dbConnect";
-import ProductList from "@/app/products/page";
-import { NextResponse } from "next/server";
+import dbConnect from "@/libs/dbConnect";
+import ProductModal from "@/models/products";
+
 
 export async function POST(request) {
     try{
-
         await dbConnect()
     
-        const {name , price, Image,  category} = await request.json();
-        const product =  new ProductsModal({
-            name,
-            price,
-            Image,
-            category
-        })
-        await product.save()
-        return new Response(JSON.stringify({product}),
+        const {name, price, category} = await request.json()
+    
+        if(!name || !price || !category){
+            return new Response(JSON.stringify({error: "all field are required"}),
         {
+            status:400,
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+        }
+        const Product = new ProductModal({
+            name: name,
+            price: price,
+            category: category
+        })
+
+        await Product.save()
+        return new Response(JSON.stringify({message: "Product add successfully", Product}),{
             status: 201,
             headers:{
                 "Content-Type": "application/json"
             }
-        }
-    )
-    } catch(error){
-        return new Response(JSON.stringify({error: error.message}),{
-            status:500,
-            headers:{'Content-Type': 'application/json'}
         })
+    }catch(error){
+       return new Response(JSON.stringify({error: error}),{
+        status:500,
+        headers:{
+            "Content-Type":"application/json"
+        }
+       })
     }
 }
-

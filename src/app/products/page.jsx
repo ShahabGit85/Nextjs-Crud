@@ -85,7 +85,7 @@ export default function ProductList() {
                     <Link
                       color="ghost"
                       size="xs"
-                      href={`/editProduct/${product.id}`}
+                      href={`/editProduct/${product._id}`}
                     >
                       Edit
                     </Link>

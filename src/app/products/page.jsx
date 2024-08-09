@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-daisyui";
+import { Toaster, toast } from "react-hot-toast";
 
 const getProducts = async () => {
   try {
@@ -28,17 +29,27 @@ const getProducts = async () => {
 export default function ProductList() {
   const router = useRouter();
   const [products, setProducts] = useState([]);
+
   const RemoveProduct = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (!confirmDelete) return;
+
     try {
-      const res = await fetch(`http://localhost:3000/api/deleteProducts/?_id=${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `http://localhost:3000/api/deleteProducts/?_id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (res.ok) {
+        toast.success("Your product has been deleted");
         router.refresh();
       } else {
+        toast.error("Failed to delete product");
         console.error("Failed to delete product");
       }
     } catch (error) {
+      toast.error("An error occurred while deleting the product");
       console.error("An error occurred while deleting the product:", error);
     }
   };
@@ -130,6 +141,7 @@ export default function ProductList() {
             )}
           </tbody>
         </table>
+        <Toaster />
       </div>
     </div>
   );

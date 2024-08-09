@@ -1,10 +1,11 @@
 "use client"
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 export default function AddProduct() {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
-
+    const router = useRouter()
     const handleSubmit = async (e) => {
         e.preventDefault();
         const productData = {
@@ -32,6 +33,7 @@ export default function AddProduct() {
                 const errorData = await res.json();
                 alert(`Error: ${errorData.message || "Something went wrong"}`);
             }
+            router.push("/products")
         } catch (error) {
             console.error("An error occurred:", error);
             alert("An error occurred. Please try again later.");

@@ -109,10 +109,11 @@ export default function ProductList() {
                   </td>
                   <td className="py-3 px-4">{product.price}</td>
                   <td className="py-3 px-4">{product.category}</td>
-                  <td className="py-3 px-4">
+                  <td>
                     <Link
                       color="ghost"
                       size="xs"
+                      className="bg-blue-600 px-4 py-2 rounded text-white"
                       href={`/editProduct/?id=${product._id}`}
                     >
                       Edit
@@ -122,6 +123,7 @@ export default function ProductList() {
                     <Button
                       color="ghost"
                       size="xs"
+                      className="bg-red-600  p-2 rounded text-white"
                       onClick={() => RemoveProduct(product._id)}
                     >
                       Delete

@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 export default function AddProduct() {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
@@ -25,15 +26,15 @@ export default function AddProduct() {
             if (res.ok) {
                 const product = await res.json();
                 console.log("The product is =>", product);
-                alert("The product was created successfully!");
                 setName("");
                 setPrice("");
                 setCategory("");
             } else {
                 const errorData = await res.json();
-                alert(`Error: ${errorData.message || "Something went wrong"}`);
+                toast.error(`Error: ${errorData.message || "Something went wrong"}`);
             }
             router.push("/products")
+            toast.success("Product add succesfully")
         } catch (error) {
             console.error("An error occurred:", error);
             alert("An error occurred. Please try again later.");
@@ -110,6 +111,7 @@ export default function AddProduct() {
                             </button>
                         </div>
                     </form>
+                    <Toaster/>
                 </div>
             </div>
         </>

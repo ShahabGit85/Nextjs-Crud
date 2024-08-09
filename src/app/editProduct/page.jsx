@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 export default function AddProduct() {
     const router = useRouter()
     const [name, setName] = useState("");
@@ -20,6 +21,7 @@ export default function AddProduct() {
                 setName(data?.name || "");
                 setPrice(data?.price || "");
                 setCategory(data?.category || "");
+
             } catch (error) {
                 console.log("error", error);
             }
@@ -50,11 +52,14 @@ export default function AddProduct() {
                 throw new Error('Error occurred while updating the product');
             }     
             console.log("Updated product data:", data);
+            toast.success("You procduct update successfully")
 
             router.refresh()
             router.push("/products")
         } catch (error) {
             console.log("Error:", error.message);
+            toast.error("soory can't update the product")
+
         }
     
         
@@ -139,6 +144,7 @@ export default function AddProduct() {
                         </button>
                     </div>
                 </form>
+                <Toaster/>
             </div>
         </div>
     );

@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-daisyui";
 
@@ -24,7 +26,22 @@ const getProducts = async () => {
 };
 
 export default function ProductList() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
+  const RemoveProduct = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3000/api/deleteProducts/?_id=${id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        router.refresh();
+      } else {
+        console.error("Failed to delete product");
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the product:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -65,11 +82,11 @@ export default function ProductList() {
           <tbody>
             {products.length > 0 ? (
               products.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50 border-b">
+                <tr key={product._id} className="hover:bg-gray-50 border-b">
                   <td className="py-3 px-4 flex items-center">
                     <img
                       className="h-10 w-10 rounded-full object-cover mr-4"
-                      src={product.image}
+                      src="https://picsum.photos/200/300"
                       alt={product.name}
                     />
                     <div>
@@ -85,13 +102,17 @@ export default function ProductList() {
                     <Link
                       color="ghost"
                       size="xs"
-                      href={`/editProduct/${product._id}`}
+                      href={`/editProduct/?id=${product._id}`}
                     >
                       Edit
                     </Link>
                   </td>
                   <td className="py-3 px-4">
-                    <Button color="ghost" size="xs">
+                    <Button
+                      color="ghost"
+                      size="xs"
+                      onClick={() => RemoveProduct(product._id)}
+                    >
                       Delete
                     </Button>
                   </td>
